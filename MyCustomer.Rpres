@@ -1,0 +1,107 @@
+MyCustomers Apps
+========================================================
+author: boole2
+date: 29-09-2016
+autosize: true
+
+
+```{r, echo=FALSE}
+library(dplyr)
+high_spending <- readRDS("data/customerdata.rds")
+high_spending <- high_spending[ high_spending$ticket_avg < 18,]
+```
+
+Context and Features of MyCustomer Apps
+========================================================
+MyCustomers Apps is  a Data Analysis Application that let users
+interacts with Customer database filtering Individuals
+based on his spending behaviours.
+Key user are Marketing Analyst of   Retailer's company.
+
+
+The application is availabe at this link.
+
+  <https://boole2.shinyapps.io/MyCustomer/>.
+
+
+
+
+
+
+
+The Avarage Ticket Distribution
+========================================================
+
+User can filter  Customer database based on Spending Range selecting max Average Ticket and Min Average Ticket moving slider on the left of the pannel.
+
+
+- The Diagram  Show Distribution and main figures of the Individuals Sub Groups based on their avarage ticket
+
+***
+
+Example of the Diagram
+
+```{r, echo= FALSE}
+
+
+                         hist(high_spending$ticket_avg, xlim = c(0,18), ylim = c(0,120), xlab='Customer Avarage Ticket', col='lightblue',main='Distribution of Avarge Ticket for selected Population on Range')
+
+
+```
+
+The Ages Distribution
+========================================================
+
+User can filter  Customer database based on Spending Range selecting max Average Ticket and Min Average Ticket moving slider on the left of the pannel.
+
+
+- The Diagram Show Distribution of Ages  corresponding  to customer sub groups selected by Spending range.
+
+***
+
+Example of the Diagram
+
+```{r, echo= FALSE}
+
+                    hist(high_spending$age, xlim = c(0,120), ylim = c(0,120), xlab='Customer Age for Individuals', col='lightblue',main='Distribution of Age for selected population in Range')
+
+
+
+```
+
+
+Customer Presence Weekday vs Weekend
+========================================================
+
+User can filter  Customer database based on Spending Range selecting max Average Ticket and Min Average Ticket moving slider on the left of the pannel.
+
+
+
+- The Diagram Show relative rate of  Customer presence douring week days vs weekend for the selected group.
+
+***
+
+Example of the Diagram
+
+```{r, echo= FALSE}
+
+                         sum_weekday <-   high_spending %>% summarise(
+                              i_wend = sum ( ifelse( frq_wend.avg > 0, 1,0  )),
+                              i_wday = sum ( ifelse( frq_wday.avg > 0, 1,0  )   ),
+                              t_wend = sum ( ifelse( frq_wend.avg > 0, ticket_avg,0  )),
+                              t_wday = sum ( ifelse( frq_wday.avg > 0, ticket_avg,0  )   ),
+                              t_avg_wend = round(  t_wend /i_wend,2),
+                              t_avg_wday = round(  t_wday /i_wday,2))
+
+                        slices <- c(sum_weekday$i_wend, sum_weekday$i_wday )
+                        lbls <- c(" Customer  Weekends", "Customer Weekdays ")
+                        pie(slices, labels = lbls, col=rainbow(length(lbls)),  main="Chart of Customer  Presence in Weekdays vs Weekend")
+                        legend("topleft", c(paste("Presence Weekend = ", sum_weekday$i_wend),paste("Presence Weekay = ", sum_weekday$i_wday)), cex = 0.8,
+                               fill = rainbow(length(lbls)))
+
+
+
+```
+
+
+
